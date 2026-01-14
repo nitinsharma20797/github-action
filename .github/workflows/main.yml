@@ -1,0 +1,40 @@
+name: Docker Build and Run (Django / Todo App)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  docker-build-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Git Checkout (same as Jenkins)
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Build Docker Image
+      - name: Build Docker image
+        run: |
+          docker build -t todo-app .
+
+      # 3️⃣ Stop old container (if exists)
+      - name: Remove old container
+        run: |
+          docker rm -f todo-container || true
+
+      # 4️⃣ Run Docker container
+      - name: Run Docker container
+        run: |
+          docker run -d \
+            --name todo-container \
+            -p 8000:8000 \
+            todo-app
+
+      # 5️⃣ Verify container
+      - name: Verify app is running
+        run: |
+          sleep 5
+          curl -f http://localhost:8000
