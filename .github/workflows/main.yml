@@ -15,8 +15,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # 2️⃣ Build Docker Image
+      # 2️⃣ Build Docker Image (Dockerfile is inside python-app)
       - name: Build Docker image
+        working-directory: python-app
         run: |
           docker build -t todo-app .
 
